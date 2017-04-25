@@ -26,10 +26,18 @@ class Rational(object):
         self._den = den // d
     
     def __add__(self, o):
-        return Rational(self._num * o._den + self._den * o._num, self._den * o._den)
+        if isinstance(o, Rational):
+            return Rational(self._num * o._den + self._den * o._num, self._den * o._den)
+        elif isinstance(o, int):
+            return Rational(self._num + self._den * o, self._den)
+        else:
+            return NotImplemented
     
     def __sub__(self, o):
-        return Rational(self._num * o._den - self._den * o._num, self._den * o._den)
+        if isinstance(o, Rational):
+            return Rational(self._num * o._den - self._den * o._num, self._den * o._den)
+        elif isinstance(o, int):
+            return Rational(self._num - self._den * o, self._den)
     
     def __mul__(self, o):
         return Rational(self._num * o._num, self._den * o._den)
@@ -68,4 +76,6 @@ class Rational(object):
     
     def __bool__(self):
         return self._num != 0
-
+    
+    def __lt__(self, o):
+        
