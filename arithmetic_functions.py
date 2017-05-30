@@ -20,7 +20,7 @@ def lcm(a, b):
 
 def quadres(p, q):
     for x in range(0, p - 1):
-        if (x ** 2 - q) % p == 0:
+        if (x * x - q) % p == 0:
             return 1
     return -1
 
