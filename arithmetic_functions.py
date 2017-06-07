@@ -16,10 +16,10 @@ def gcd(a, b):
 def lcm(a, b):
     if a == 0 or b == 0:
         return 0
-    return a * b / gcd(a, b)
+    return a * b // gcd(a, b)
 
 def quadres(p, q):
-    for x in range(0, p - 1):
+    for x in range(0, (p - 1) // 2):
         if (x * x - q) % p == 0:
             return 1
     return -1
