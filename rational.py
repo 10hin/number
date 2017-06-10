@@ -48,7 +48,7 @@ class Rational(object):
         # supported type for operand except Rational
         if isinstance(o, int):
             return Rational(self._num + self._den * o, self._den)
-        if not instanceof(o, Rational):
+        if not isinstance(o, Rational):
             return NotImplemented
         return Rational(self._num * o._den + self._den * o._num, self._den * o._den)
     def __radd__(self, o):
@@ -119,23 +119,23 @@ class Rational(object):
         """
         '//' operator
         """
-        return __truediv__(self, o)
+        return self.__truediv__(o)
     def __rfloordiv__(self, o):
         """
         fallback of '//' operator
         """
-        return __rtruediv__(self, o)
+        return self.__rtruediv__(o)
     
     def __div__(self, o):
         """
         '/' operator
         """
-        return __truediv__(self, o)
+        return self.__truediv__(o)
     def __rdiv__(self, o):
         """
         fallback of '/' operator
         """
-        return __rtruediv__(self, o)
+        return self.__rtruediv__(o)
     
     def __mod__(self, o):
         """
@@ -148,7 +148,7 @@ class Rational(object):
         if not isinstance(o, Rational):
             return NotImplemented
         if o._num == 0:
-            raise eroDivisionError('division by zero')
+            raise ZeroDivisionError('division by zero')
         return Rational(0, 1)
     def __rmod__(self, o):
         """
