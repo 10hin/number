@@ -1,22 +1,24 @@
-import sys
+"""
+module rational number
+"""
 
-def gcd(a, b):
+def _gcd(num_a, num_b):
     """
     gratest common divisor
     """
-    if a == 0 or b == 0:
+    if num_a == 0 or num_b == 0:
         raise ArithmeticError('gcd of zero')
-    p = a
-    q = b
-    if p < q:
-        p = b
-        q = a
-    r = p % q
-    while r != 0:
-        p = q
-        q = r
-        r = p % q
-    return q
+    var_p = num_a
+    var_q = num_b
+    if var_p < var_q:
+        var_p = num_b
+        var_q = num_a
+    var_r = var_p % var_q
+    while var_r != 0:
+        var_p = var_q
+        var_q = var_r
+        var_r = var_p % var_q
+    return var_q
 
 class Rational(object):
     """
@@ -35,309 +37,298 @@ class Rational(object):
             sign = 1
             if num * den < 0:
                 sign = -1
-            absNum = abs(num)
-            absDen = abs(den)
-            d = gcd(absNum, absDen)
-            self._num = sign * absNum // d
-            self._den = absDen // d
-    
-    def __add__(self, o):
+            abs_num = abs(num)
+            abs_den = abs(den)
+            divisor = _gcd(abs_num, abs_den)
+            self._num = sign * abs_num // divisor
+            self._den = abs_den // divisor
+    #
+    def __add__(self, other):
         """
         '+' operator
         """
         # supported type for operand except Rational
-        if isinstance(o, int):
-            return Rational(self._num + self._den * o, self._den)
-        if not instanceof(o, Rational):
+        if isinstance(other, int):
+            return Rational(self.num + self.den * other, self.den)
+        if not isinstance(other, Rational):
             return NotImplemented
-        return Rational(self._num * o._den + self._den * o._num, self._den * o._den)
-    def __radd__(self, o):
+        return Rational(self.num * other.den + self.den * other.num, self.den * other.den)
+    def __radd__(self, other):
         """
         fallback of '+' operator
         """
-        if isinstance(o, int):
-            return self.__add__(o)
+        if isinstance(other, int):
+            return self.__add__(other)
         return NotImplemented
-    
-    def __sub__(self, o):
+    #
+    def __sub__(self, other):
         """
         '-' binary operator
         """
         # supported type for operand except Rational
-        if isinstance(o, int):
-            return Rational(self._num - self._den * o, self._den)
-        if not isinstance(o, Rational):
+        if isinstance(other, int):
+            return Rational(self.num - self.den * other, self.den)
+        if not isinstance(other, Rational):
             return NotImplemented
-        return Rational(self._num * o._den - self._den * o._num, self._den * o._den)
-    def __rsub__(self, o):
+        return Rational(self.num * other.den - self.den * other.num, self.den * other.den)
+    def __rsub__(self, other):
         """
         fallback of '-' binary operator
         """
-        if isinstance(o, int):
-            return self.__neg__().__add__(- o)
+        if isinstance(other, int):
+            return self.__neg__().__add__(- other)
         return NotImplemented
-    
-    def __mul__(self, o):
+    #
+    def __mul__(self, other):
         """
         '*' operator
         """
         # supported type for operand except Rational
-        if isinstance(o, int):
-            return Rational(self._num * o, self._den)
-        if not isinstance(o, Rational):
+        if isinstance(other, int):
+            return Rational(self.num * other, self.den)
+        if not isinstance(other, Rational):
             return NotImplemented
-        return Rational(self._num * o._num, self._den * o._den)
-    def __rmul__(self, o):
+        return Rational(self.num * other.num, self.den * other.den)
+    def __rmul__(self, other):
         """
         fallback of '*' operator
         """
-        return self.__mul__(o)
-    
-    def __truediv__(self, o):
+        return self.__mul__(other)
+    #
+    def __truediv__(self, other):
         """
         '/' operator when '__future__.division' is in effect
         """
         # supported type for operand except Rational
-        if isinstance(o, int):
-            if o == 0:
+        if isinstance(other, int):
+            if other == 0:
                 raise ZeroDivisionError('division by zero')
-            return Rational(self._num, self._den * o)
-        if not isinstance(o, Rational):
+            return Rational(self.num, self.den * other)
+        if not isinstance(other, Rational):
             return NotImplemented
-        if o._num == 0:
+        if other == 0:
             raise ZeroDivisionError('division by zero')
-        return Rational(self._num * o._den, self._den * o._num)
-    def __rtruediv__(self, o):
+        return Rational(self.num * other.den, self.den * other.num)
+    def __rtruediv__(self, other):
         """
         fallback of '/' operator when '__future__.division' is in effect
         """
-        if isinstance(o, int):
-            return Rational(self._den * o, self._num)
+        if isinstance(other, int):
+            return Rational(self.den * other, self.num)
         return NotImplemented
-    
-    def __floordiv__(self, o):
+    #
+    def __floordiv__(self, other):
         """
         '//' operator
         """
-        return __truediv__(self, o)
-    def __rfloordiv__(self, o):
+        return self.__truediv__(other)
+    def __rfloordiv__(self, other):
         """
         fallback of '//' operator
         """
-        return __rtruediv__(self, o)
-    
-    def __div__(self, o):
+        return self.__rtruediv__(other)
+    #
+    def __div__(self, other):
         """
         '/' operator
         """
-        return __truediv__(self, o)
-    def __rdiv__(self, o):
+        return self.__truediv__(other)
+    def __rdiv__(self, other):
         """
         fallback of '/' operator
         """
-        return __rtruediv__(self, o)
-    
-    def __mod__(self, o):
+        return self.__rtruediv__(other)
+    #
+    def __mod__(self, other):
         """
         '%' operator
         """
-        if isinstance(o, int):
-            if o == 0:
+        if isinstance(other, int):
+            if other == 0:
                 raise ZeroDivisionError('division by zero')
             return Rational(0, 1)
-        if not isinstance(o, Rational):
+        if not isinstance(other, Rational):
             return NotImplemented
-        if o._num == 0:
-            raise eroDivisionError('division by zero')
+        if other == 0:
+            raise ZeroDivisionError('division by zero')
         return Rational(0, 1)
-    def __rmod__(self, o):
+    def __rmod__(self, other):
         """
         fallback of '%' operator
         """
         if self == Rational(0, 1):
             raise ZeroDivisionError('division by zero')
         return Rational(0, 1)
-    
-    def __divmod__(self, o):
+    #
+    def __divmod__(self, other):
         """
         'divmod()' operation
         """
-        d = self.__floordiv__(o)
-        m = self.__mod__(o)
-        if d != NotImplemented and m != NotImplemented:
-            return (d, m)
+        quot = self.__floordiv__(other)
+        res = self.__mod__(other)
+        if quot != NotImplemented and res != NotImplemented:
+            return (quot, res)
         return NotImplemented
-    def __rdivmod__(self, o):
+    def __rdivmod__(self, other):
         """
         fallback of 'divmod()' operation
         """
-        d = self.__rdiv__(o)
-        m = self.__rmod__(o)
-        if d != NotImplemented and m != NotImplemented:
-            return (d, m)
+        quot = self.__rfloordiv__(other)
+        res = self.__rmod__(other)
+        if quot != NotImplemented and res != NotImplemented:
+            return (quot, res)
         return NotImplemented
-    
+    #
     def __pos__(self):
         """
         '+' unary operator
         """
         return self
-    
+    #
     def __neg__(self):
         """
         '-' unary operator
         """
-        return Rational(- self._num, self._den)
-    
+        return Rational(-1 * self.num, self.den)
+    #
     def __abs__(self):
         """
         absolute value
         """
-        return Rational(abs(self._num), self._den)
-    
+        return Rational(abs(self.num), self.den)
+    #
     # "rich comparison" method
-    def __lt__(self, o):
+    def __lt__(self, other):
         """
         '<' operator
         """
         # supported type for operand except Rational
-        if isinstance(o, int):
-            return self._num - o * self._den < 0
-        if not isinstance(o, Rational):
+        if isinstance(other, int):
+            return self.num - other * self.den < 0
+        if not isinstance(other, Rational):
             return NotImplemented
-        return self._num * o._den - o._num * self._den < 0
-    
-    def __le__(self, o):
+        return self.num * other.den - other.num * self.den < 0
+    #
+    def __le__(self, other):
         """
         '<=' operator
         """
         # supported type for operand except Rational
-        if isinstance(o, int):
-            return self._num - o * self._den <= 0
-        if not isinstance(o, Rational):
+        if isinstance(other, int):
+            return self.num - other * self.den <= 0
+        if not isinstance(other, Rational):
             return NotImplemented
-        return self._num * o._den - o._num * self._den <= 0
-    
-    def __eq__(self, o):
+        return self.num * other.den - other.num * self.den <= 0
+    #
+    def __eq__(self, other):
         """
         '==' operator
         """
         # supported type for operand except Rational
-        if isinstance(o, int):
-            return self._num - o * self._den == 0
-        if not isinstance(o, Rational):
+        if isinstance(other, int):
+            return self.num - other * self.den == 0
+        if not isinstance(other, Rational):
             return NotImplemented
-        return self._num * o._den - o._num * self._den == 0
-    
-    def __ne__(self, o):
+        return self.num * other.den - other.num * self.den == 0
+    #
+    def __ne__(self, other):
         """
         '!=' or '<>' operator
         """
         # supported type for operand except Rational
-        if isinstance(o, int):
-            return self._num - o * self._den != 0
-        if not isinstance(o, Rational):
+        if isinstance(other, int):
+            return self.num - other * self.den != 0
+        if not isinstance(other, Rational):
             return NotImplemented
-        return self._num * o._den - o._num * self._den != 0
-    
-    def __gt__(self, o):
+        return self.num * other.den - other.num * self.den != 0
+    #
+    def __gt__(self, other):
         """
         '>' operator
         """
         # supported type for operand except Rational
-        if isinstance(o, int):
-            return self._num - o * self._den > 0
-        if not isinstance(o, Rational):
+        if isinstance(other, int):
+            return self.num - other * self.den > 0
+        if not isinstance(other, Rational):
             return NotImplemented
-        return self._num * o._den - o._num * self._den > 0
-    
-    def __ge__(self, o):
+        return self.num * other.den - other.num * self.den > 0
+    #
+    def __ge__(self, other):
         """
         '>=' operator
         """
         # supported type for operand except Rational
-        if isinstance(o, int):
-            return self._num - o * self._den >= 0
-        if not isinstance(o, Rational):
+        if isinstance(other, int):
+            return self.num - other * self.den >= 0
+        if not isinstance(other, Rational):
             return NotImplemented
-        return self._num * o._den - o._num * self._den >= 0
-    
-    def __cmp__(self, o):
-        """
-        fallback of comparing operator
-        defined for Python2.X.
-        """
-        if sys.version_info.major == 2:
-            if isinstance(o, int):
-                return o * self._den - self._num
-            if not isinstance(o, Rational):
-                return NotImplemented
-            return o._num * self._den - self._num * o._den
-        else:
-            return NotImplemented
-    
+        return self.num * other.den - other.num * self.den >= 0
+    #
     def __hash__(self):
         """
         calc hash value
         """
-        return hash((self._num, self._den))
-    
-    def __unicode__(self):
-        """
-        'unicode()' operation
-        defined for Python 2.X
-        """
-        if sys.version_info.major == 2:
-            return unicode(self.__str__())
-        else:
-            return NotImplemented
-    
+        return hash((self.num, self.den))
+    #
     def __repr__(self):
         """
         'official' string representation
         """
-        return '<Rational: num=%d, den=%d>' % (self._num, self._den)
-    
+        return '<Rational: num=%d, den=%d>' % (self.num, self.den)
+    #
     def __str__(self):
         """
         'informal' string representation
         """
-        ret = str(self._num)
-        if self._den != 1:
-            ret += '/' + str(self._den)
+        ret = str(self.num)
+        if self.den != 1:
+            ret += '/' + str(self.den)
         return ret
-    
+    #
     def __bytes__(self):
         """
         'bytes()' operation
         """
         return bytes(str(self), 'utf8')
-    
+    #
     def __bool__(self):
         """
         'bool()' operation
         """
-        return self._num != 0
-    
-    def __nonzero__(self):
+        return self.num != 0
+    #
+    def isinteger(self):
         """
-        'bool()' operation
-        defined for Python2.X
+        Does this Rational instance represent integer?
         """
-        if sys.version_info.major == 2:
-            return self.__bool__()
-        else:
-            return NotImplemented
-    
+        return self.den == 1
+    #
+    def num(self):
+        """
+        returns numerator of Rational
+        """
+        return self.num
+    #
+    def den(self):
+        """
+        returns denominator of Rational
+        """
+        return self.den
+    #
     @staticmethod
-    def parse(str):
+    def parse(string):
         """
         parse string to Rational
         """
-        posslash = str.find('/')
+        posslash = string.find('/')
         if posslash < 0:
-            return Rational(int(str), 1)
+            return Rational(int(string), 1)
         else:
-            strs = str.split('/')
+            strs = string.split('/')
             return Rational(int(strs[0].strip()), int(strs[1].strip()))
+    #
+    ZERO = None
+    ONE = None
 
+Rational.ZERO = Rational(0, 1)
+Rational.ONE = Rational(1, 1)
