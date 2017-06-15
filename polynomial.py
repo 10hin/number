@@ -46,8 +46,8 @@ class Polynomial(object):
             new_coefs = list(self.coeffs())
             new_coefs[0] = new_coefs[0] + other
         new_coefs = []
-        new_dim = max(self.dim, other.dim)
-        for cnt in range(0, new_dim):
+        may_new_dim = max(self.dim, other.dim)
+        for cnt in range(0, may_new_dim):
             self_coef = 0
             if cnt < self.dim:
                 self_coef = self.coeff(cnt)
@@ -55,6 +55,13 @@ class Polynomial(object):
             if cnt < other.dim:
                 other_coef = other.coeff(cnt)
             new_coefs.append(self_coef + other_coef)
+        new_dim = may_new_dim
+        for cnt in range(may_new_dim - 1, -1, -1):
+            if new_coefs[cnt] == 0:
+                new_dim = cnt + 1
+            else:
+                break
+        new_coefs = new_coefs[0:new_dim]
         return Polynomial(new_coefs)
     #
     def deg(self):
