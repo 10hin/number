@@ -23,6 +23,12 @@ class Polynomial(object):
             if not Number.isnumber(maybe_number):
                 raise TypeError('coeffs parameter contains something not to be number')
             maybe_coeffs.append(maybe_number)
+        for cnt in reversed(maybe_coeffs):
+            if cnt == 0 and 1 < len(maybe_coeffs):
+                # remove last element(=0)
+                del maybe_coeffs[len(maybe_coeffs) - 1]
+            else:
+                break
         self._coeffs = maybe_coeffs
     #
     def __pos__(self):
@@ -46,22 +52,21 @@ class Polynomial(object):
             new_coefs = list(self.coeffs())
             new_coefs[0] = new_coefs[0] + other
         new_coefs = []
-        may_new_dim = max(self.dim, other.dim)
+        may_new_dim = max(self.dim(), other.dim())
         for cnt in range(0, may_new_dim):
             self_coef = 0
-            if cnt < self.dim:
+            if cnt < self.dim():
                 self_coef = self.coeff(cnt)
             other_coef = 0
-            if cnt < other.dim:
+            if cnt < other.dim():
                 other_coef = other.coeff(cnt)
             new_coefs.append(self_coef + other_coef)
-        new_dim = may_new_dim
-        for cnt in range(may_new_dim - 1, -1, -1):
-            if new_coefs[cnt] == 0:
-                new_dim = cnt + 1
+        for coef in reversed(new_coefs):
+            if coef == 0 and 1 < len(new_coefs):
+                # remove last element(=0)
+                del new_coefs[len(new_coefs) - 1]
             else:
                 break
-        new_coefs = new_coefs[0:new_dim]
         return Polynomial(new_coefs)
     #
     def deg(self):
@@ -84,3 +89,4 @@ class Polynomial(object):
         returns tuple of coefficients
         """
         return tuple(self._coeffs)
+
