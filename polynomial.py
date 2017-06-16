@@ -10,26 +10,39 @@ def _ispolynomial(obj):
     if isinstance(obj, Polynomial):
         return True
     return False
+def _remove_zero_coeff(coeffs):
+    """
+    リスト末尾の値が0のエントリを削除したリストを返す
+    ただしすべての要素が0の時は0が１つだけ含まれるリストを返す
+    """
+    result = coeffs[:]
+    for elm in reversed(coeffs):
+        if elm == 0 and 1 < len(result):
+            # remove last element
+            del result[len(result) - 1]
+        else:
+            break
+    return result
+def _check_coeff_list(maybe_coeffs):
+    """
+    引数が数値を要素とするiterableかどうかを判定する
+    数値のみからなる場合はtrueを、
+    数値以外を含む場合はfalseを返す。
+    数値かどうかの判定にはNumber.isnumber()を用いる
+    """
+    for elm in maybe_coeffs:
+        if not Number.isnumber(elm):
+            return false
+    return true
 
 class Polynomial(object):
     """
     regresenting polynomial
     """
     def __init__(self, coeffs):
-        if not hasattr(coeffs, '__iter__'):
-            raise TypeError('Polynomial(coeffs) constructor accepts iterable object only')
-        maybe_coeffs = []
-        for maybe_number in coeffs:
-            if not Number.isnumber(maybe_number):
-                raise TypeError('coeffs parameter contains something not to be number')
-            maybe_coeffs.append(maybe_number)
-        for cnt in reversed(maybe_coeffs):
-            if cnt == 0 and 1 < len(maybe_coeffs):
-                # remove last element(=0)
-                del maybe_coeffs[len(maybe_coeffs) - 1]
-            else:
-                break
-        self._coeffs = maybe_coeffs
+        if not _check_coeff_list(coeffs):
+            raise TypeError('Polynomial(coeffs) constructor accept iterable of number')
+        self._coeffs = _remove_zero_coeff(coeffs)
     #
     def __pos__(self):
         """
@@ -38,7 +51,7 @@ class Polynomial(object):
         return self
     def __neg__(self):
         """
-        '+' unary operator
+        '-' unary operator
         """
         new_coefs = list(self.coeffs())
         for cnt in range(0, self.dim):
@@ -61,13 +74,10 @@ class Polynomial(object):
             if cnt < other.dim():
                 other_coef = other.coeff(cnt)
             new_coefs.append(self_coef + other_coef)
-        for coef in reversed(new_coefs):
-            if coef == 0 and 1 < len(new_coefs):
-                # remove last element(=0)
-                del new_coefs[len(new_coefs) - 1]
-            else:
-                break
+        new_coefs = _remove_zero_coeff(new_coefs):
         return Polynomial(new_coefs)
+    def __radd__(self, other):
+        return self.__add__(other)
     #
     def deg(self):
         """
