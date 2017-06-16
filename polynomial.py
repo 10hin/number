@@ -64,6 +64,7 @@ class Polynomial(object):
         if Number.isnumber(other):
             new_coefs = list(self.coeffs())
             new_coefs[0] = new_coefs[0] + other
+            return Polynomial(new_coefs)
         new_coefs = []
         may_new_dim = max(self.dim(), other.dim())
         for cnt in range(0, may_new_dim):
@@ -78,6 +79,45 @@ class Polynomial(object):
         return Polynomial(new_coefs)
     def __radd__(self, other):
         return self.__add__(other)
+    #
+    def __sub__(self, other):
+        if not _ispolynomial(other):
+            return NotImplemented
+        if Number.isnumber(other):
+            new_coefs = list(self.coeffs())
+            new_coefs[0] = new_coefs[0] - other
+            return Polynomial(new_coefs)
+        new_coefs = []
+        may_new_dim = max(self.dim(), other.dim())
+        for cnt in range(0, may_new_dim):
+            self_coef = 0
+            if cnt < self.dim():
+                self_coef = self.coeff(cnt)
+            other_coef = 0
+            if cnt < other.dim():
+                other_coef = other.coeff(cnt)
+            new_coefs.append(self_coef - other_coef)
+        new_coefs = _remove_zero_coeff(new_coefs):
+        return Polynomial(new_coefs)
+    def __rsub__(self, other):
+        if not _ispolynomial(other):
+            return NotImplemented
+        if Number.isnumber(other):
+            new_coefs = list(self.coeffs())
+            new_coefs[0] = new_coefs[0] - other
+            return Polynomial(new_coefs)
+        new_coefs = []
+        may_new_dim = max(self.dim(), other.dim())
+        for cnt in range(0, may_new_dim):
+            self_coef = 0
+            if cnt < self.dim():
+                self_coef = self.coeff(cnt)
+            other_coef = 0
+            if cnt < other.dim():
+                other_coef = other.coeff(cnt)
+            new_coefs.append(- self_coef + other_coef)
+        new_coefs = _remove_zero_coeff(new_coefs):
+        return Polynomial(new_coefs)
     #
     def deg(self):
         """
