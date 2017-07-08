@@ -1,6 +1,22 @@
 from number import Number
 import unittest
 
-class NumberTest(unittest.TestCase)
-    def isNumberTest_integerLiteral():
-        
+class NumberTest(unittest.TestCase):
+    def test_isnumber_integerLiteral(self):
+        self.assertTrue(Number.isnumber(0))
+        self.assertTrue(Number.isnumber(1))
+        self.assertTrue(Number.isnumber(2))
+        self.assertTrue(Number.isnumber(3))
+        self.assertTrue(Number.isnumber(4))
+        self.assertTrue(Number.isnumber(5))
+        self.assertTrue(Number.isnumber(6))
+        self.assertTrue(Number.isnumber(7))
+        self.assertTrue(Number.isnumber(8))
+        self.assertTrue(Number.isnumber(9))
+        self.assertTrue(Number.isnumber(1.5))
+    def test_isnumber_notInteger(self):
+        self.assertFalse(Number.isnumber('10'))
+
+if __name__ == '__main__':
+    unittest.main()
+
