@@ -119,6 +119,20 @@ class Polynomial(object):
         new_coefs = _remove_zero_coeff(new_coefs):
         return Polynomial(new_coefs)
     #
+    def __mul__(self, other):
+        """
+        multiply
+        """
+        if not _ispolynomial(other):
+            return NotImplemented
+        if Number.isnumber(other):
+            new_coeffs = map(lambda c : c * other, other.coeffs())
+            return Polynomial(new_coeffs)
+        new_deg = self.deg() + other.deg()
+        new_coeffs = []
+        for r in range(new_deg + 1):
+            # multiply and add the coeffs.
+    #
     def deg(self):
         """
         returns degree of this Polynomial
