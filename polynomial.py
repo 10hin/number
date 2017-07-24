@@ -131,7 +131,11 @@ class Polynomial(object):
         new_deg = self.deg() + other.deg()
         new_coeffs = []
         for r in range(new_deg + 1):
-            # multiply and add the coeffs.
+            sum = 0
+            for i in range(r + 1):
+                sum += self.coeff(i) * other.coeff(r - i)
+            new_coeffs[r] = sum
+        return Polynomial(new_coeffs)
     #
     def deg(self):
         """
