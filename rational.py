@@ -49,10 +49,10 @@ class Rational(object):
         """
         # supported type for operand except Rational
         if isinstance(other, int):
-            return Rational(self.num + self.den * other, self.den)
+            return Rational(self._num + self._den * other, self._den)
         if not isinstance(other, Rational):
             return NotImplemented
-        return Rational(self.num * other.den + self.den * other.num, self.den * other.den)
+        return Rational(self._num * other._den + self._den * other._num, self._den * other._den)
     def __radd__(self, other):
         """
         fallback of '+' operator
@@ -67,10 +67,10 @@ class Rational(object):
         """
         # supported type for operand except Rational
         if isinstance(other, int):
-            return Rational(self.num - self.den * other, self.den)
+            return Rational(self._num - self._den * other, self._den)
         if not isinstance(other, Rational):
             return NotImplemented
-        return Rational(self.num * other.den - self.den * other.num, self.den * other.den)
+        return Rational(self._num * other._den - self._den * other._num, self._den * other._den)
     def __rsub__(self, other):
         """
         fallback of '-' binary operator
@@ -85,10 +85,10 @@ class Rational(object):
         """
         # supported type for operand except Rational
         if isinstance(other, int):
-            return Rational(self.num * other, self.den)
+            return Rational(self._num * other, self._den)
         if not isinstance(other, Rational):
             return NotImplemented
-        return Rational(self.num * other.num, self.den * other.den)
+        return Rational(self._num * other._num, self._den * other._den)
     def __rmul__(self, other):
         """
         fallback of '*' operator
@@ -103,18 +103,18 @@ class Rational(object):
         if isinstance(other, int):
             if other == 0:
                 raise ZeroDivisionError('division by zero')
-            return Rational(self.num, self.den * other)
+            return Rational(self._num, self._den * other)
         if not isinstance(other, Rational):
             return NotImplemented
         if other == 0:
             raise ZeroDivisionError('division by zero')
-        return Rational(self.num * other.den, self.den * other.num)
+        return Rational(self._num * other._den, self._den * other._num)
     def __rtruediv__(self, other):
         """
         fallback of '/' operator when '__future__.division' is in effect
         """
         if isinstance(other, int):
-            return Rational(self.den * other, self.num)
+            return Rational(self._den * other, self._num)
         return NotImplemented
     #
     def __floordiv__(self, other):
@@ -189,13 +189,13 @@ class Rational(object):
         """
         '-' unary operator
         """
-        return Rational(-1 * self.num, self.den)
+        return Rational(-1 * self._num, self._den)
     #
     def __abs__(self):
         """
         absolute value
         """
-        return Rational(abs(self.num), self.den)
+        return Rational(abs(self._num), self._den)
     #
     # "rich comparison" method
     def __lt__(self, other):
@@ -204,10 +204,10 @@ class Rational(object):
         """
         # supported type for operand except Rational
         if isinstance(other, int):
-            return self.num - other * self.den < 0
+            return self._num - other * self._den < 0
         if not isinstance(other, Rational):
             return NotImplemented
-        return self.num * other.den - other.num * self.den < 0
+        return self._num * other._den - other._num * self._den < 0
     #
     def __le__(self, other):
         """
@@ -215,10 +215,10 @@ class Rational(object):
         """
         # supported type for operand except Rational
         if isinstance(other, int):
-            return self.num - other * self.den <= 0
+            return self._num - other * self._den <= 0
         if not isinstance(other, Rational):
             return NotImplemented
-        return self.num * other.den - other.num * self.den <= 0
+        return self._num * other._den - other._num * self._den <= 0
     #
     def __eq__(self, other):
         """
@@ -226,10 +226,10 @@ class Rational(object):
         """
         # supported type for operand except Rational
         if isinstance(other, int):
-            return self.num - other * self.den == 0
+            return self._num - other * self._den == 0
         if not isinstance(other, Rational):
             return NotImplemented
-        return self.num * other.den - other.num * self.den == 0
+        return self._num * other._den - other._num * self._den == 0
     #
     def __ne__(self, other):
         """
@@ -237,10 +237,10 @@ class Rational(object):
         """
         # supported type for operand except Rational
         if isinstance(other, int):
-            return self.num - other * self.den != 0
+            return self._num - other * self._den != 0
         if not isinstance(other, Rational):
             return NotImplemented
-        return self.num * other.den - other.num * self.den != 0
+        return self._num * other._den - other._num * self._den != 0
     #
     def __gt__(self, other):
         """
@@ -248,10 +248,10 @@ class Rational(object):
         """
         # supported type for operand except Rational
         if isinstance(other, int):
-            return self.num - other * self.den > 0
+            return self._num - other * self._den > 0
         if not isinstance(other, Rational):
             return NotImplemented
-        return self.num * other.den - other.num * self.den > 0
+        return self._num * other._den - other._num * self._den > 0
     #
     def __ge__(self, other):
         """
@@ -259,30 +259,30 @@ class Rational(object):
         """
         # supported type for operand except Rational
         if isinstance(other, int):
-            return self.num - other * self.den >= 0
+            return self._num - other * self._den >= 0
         if not isinstance(other, Rational):
             return NotImplemented
-        return self.num * other.den - other.num * self.den >= 0
+        return self._num * other._den - other._num * self._den >= 0
     #
     def __hash__(self):
         """
         calc hash value
         """
-        return hash((self.num, self.den))
+        return hash((self._num, self._den))
     #
     def __repr__(self):
         """
         'official' string representation
         """
-        return '<Rational: num=%d, den=%d>' % (self.num, self.den)
+        return '<Rational: num=%d, den=%d>' % (self._num, self._den)
     #
     def __str__(self):
         """
         'informal' string representation
         """
-        ret = str(self.num)
-        if self.den != 1:
-            ret += '/' + str(self.den)
+        ret = str(self._num)
+        if self._den != 1:
+            ret += '/' + str(self._den)
         return ret
     #
     def __bytes__(self):
@@ -295,25 +295,25 @@ class Rational(object):
         """
         'bool()' operation
         """
-        return self.num != 0
+        return self._num != 0
     #
     def isinteger(self):
         """
         Does this Rational instance represent integer?
         """
-        return self.den == 1
+        return self._den == 1
     #
     def num(self):
         """
         returns numerator of Rational
         """
-        return self.num
+        return self._num
     #
     def den(self):
         """
         returns denominator of Rational
         """
-        return self.den
+        return self._den
     #
     @staticmethod
     def parse(string):
