@@ -23,4 +23,3 @@ def quadres(p, q):
         if (x * x - q) % p == 0:
             return 1
     return -1
-
