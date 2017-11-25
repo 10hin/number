@@ -1,11 +1,11 @@
 def gcd(a, b):
     if a == 0 or b == 0:
         raise ArithmeticError('gcd of zero')
-    p = a
-    q = b
+    p = abs(a)
+    q = abs(b)
     if p < q:
-        p = b
-        q = a
+        p = abs(b)
+        q = abs(a)
     r = p % q
     while r != 0:
         p = q
@@ -16,7 +16,7 @@ def gcd(a, b):
 def lcm(a, b):
     if a == 0 or b == 0:
         return 0
-    return a * b // gcd(a, b)
+    return abs(a) * abs(b) // gcd(a, b)
 
 def quadres(p, q):
     for x in range(0, (p - 1) // 2):
